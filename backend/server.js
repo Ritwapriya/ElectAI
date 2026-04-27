@@ -69,12 +69,14 @@ app.get('/health', (req, res) => {
 
 // Serve static files from the React app in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'public')));
+  // On Render, the frontend build is in the ../frontend/build directory relative to the backend
+  const buildPath = path.join(__dirname, '..', 'frontend', 'build');
+  app.use(express.static(buildPath));
   
   // For any request that doesn't match an API route, send back index.html
   app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api')) return next();
-    res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(buildPath, 'index.html'));
   });
 }
 
