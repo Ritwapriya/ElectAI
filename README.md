@@ -1,10 +1,12 @@
-# ElectAI - Multi-Agent Election Education System
+# 🗳️ ElectAI - Multi-Agent Election Intelligence Platform
+
+### 🚀 [Live Demo: elect-ai.onrender.com](https://elect-ai.onrender.com)
 
 A cutting-edge AI-powered platform that uses specialized agents to deliver accurate, personalized election information to every citizen.
 
-![System Architecture](https://img.shields.io/badge/Architecture-Multi--Agent-blue)
-![AI Powered](https://img.shields.io/badge/AI-RAG%20%2B%20LLM-purple)
-![Status](https://img.shields.io/badge/Status-Production%20Ready-green)
+![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge&logo=render)
+![Architecture](https://img.shields.io/badge/Architecture-Multi--Agent-blue?style=for-the-badge)
+![AI Powered](https://img.shields.io/badge/AI-RAG%20%2B%20LLM-purple?style=for-the-badge)
 
 ## 🌟 Key Features
 
