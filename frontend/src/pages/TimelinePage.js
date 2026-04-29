@@ -269,7 +269,25 @@ const TimelinePage = () => {
           ) : (
             <div className="text-center py-12">
               <Calendar className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-              <p className="text-gray-400">No events found for the selected filter</p>
+              <p className="text-gray-400 mb-6">No events found for the selected filter</p>
+              <button 
+                onClick={async () => {
+                  try {
+                    setLoading(true);
+                    const { seedDatabase } = await import('../services/api');
+                    await seedDatabase();
+                    loadData();
+                    alert('Sample data seeded successfully!');
+                  } catch (err) {
+                    alert('Failed to seed: ' + err.message);
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                className="btn-secondary px-6 py-2"
+              >
+                Seed Sample Data
+              </button>
             </div>
           )}
         </motion.div>
