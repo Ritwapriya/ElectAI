@@ -700,6 +700,7 @@ const ChatPagePro = () => {
             <button 
               onClick={(e) => { e.stopPropagation(); setShowStateModal(true); }}
               className="flex items-center space-x-2 glass px-3 py-2 rounded-xl hover:bg-white/10 transition-colors"
+              aria-label={`Select state. Current state: ${selectedState?.name || 'None'}`}
             >
               <MapPin className="w-4 h-4 text-accent-cyan" />
               <span className="text-sm text-white">{selectedState?.name || t('selectState')}</span>
@@ -717,6 +718,7 @@ const ChatPagePro = () => {
               <button
                 onClick={() => setShowLangMenu(prev => !prev)}
                 className="flex items-center space-x-2 glass border border-white/10 rounded-xl px-3 py-2 text-sm text-white hover:border-accent-purple/50 transition-all"
+                aria-label="Change language"
               >
                 <span>{LANGUAGES.find(l => l.code === language)?.flag}</span>
                 <span>{LANGUAGES.find(l => l.code === language)?.native}</span>
@@ -750,6 +752,7 @@ const ChatPagePro = () => {
               onClick={(e) => { e.stopPropagation(); setShowRightPanel(!showRightPanel); }}
               className={`p-2 glass rounded-xl transition-colors ${showRightPanel ? 'bg-accent-purple/30 text-accent-purple' : 'text-gray-400'}`}
               title={t('toggleDashboard')}
+              aria-label={showRightPanel ? "Hide dashboard" : "Show dashboard"}
             >
               <LayoutDashboard className="w-5 h-5" />
             </button>
@@ -758,6 +761,7 @@ const ChatPagePro = () => {
               onClick={clearChat}
               className="p-2 glass rounded-xl hover:bg-white/10 text-gray-400 hover:text-white"
               title={t('clearChat')}
+              aria-label="Clear chat history"
             >
               <RefreshCw className="w-5 h-5" />
             </button>
@@ -941,17 +945,20 @@ const ChatPagePro = () => {
             <form onSubmit={handleSubmit} className="flex items-center space-x-2">
               <div className="flex-1 relative">
                 <input
+                  id="chat-input"
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder={selectedState ? `${t('askAbout')} ${selectedState.name}...` : t('selectState')}
                   className="w-full bg-gray-800/80 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-accent-purple"
                   disabled={isLoading}
+                  aria-label="Ask a question about elections"
                 />
                 <button
                   type="submit"
                   disabled={isLoading || !input.trim()}
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-gradient-to-r from-accent-purple to-accent-pink rounded-lg hover:opacity-90 transition-all disabled:opacity-50"
+                  aria-label="Send message"
                 >
                   {isLoading ? (
                     <Loader2 className="w-4 h-4 text-white animate-spin" />

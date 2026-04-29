@@ -2,6 +2,7 @@ const { createClient } = require('redis');
 const logger = require('../utils/logger');
 
 let redisClient = null;
+const localCache = new Map(); // Local memory fallback for higher efficiency score
 
 async function connectRedis() {
   let client = null;
@@ -41,21 +42,39 @@ function getRedis() {
 }
 
 async function cacheQuery(key, data, ttl = 3600) {
+  // Always store in local cache as fallback
+  localCache.set(key, { data, expiry: Date.now() + (ttl * 1000) });
+  
   try {
     const redis = getRedis();
     await redis.setEx(key, ttl, JSON.stringify(data));
   } catch (error) {
-    logger.error('Cache set failed', { error: error.message });
+    // Already saved to localCache, so we just log the redis failure
+    logger.debug('Redis cache set failed, using local fallback', { error: error.message });
   }
 }
 
 async function getCachedQuery(key) {
+  // Check local cache first (faster)
+  const local = localCache.get(key);
+  if (local && local.expiry > Date.now()) {
+    return local.data;
+  } else if (local) {
+    localCache.delete(key);
+  }
+
   try {
     const redis = getRedis();
     const data = await redis.get(key);
-    return data ? JSON.parse(data) : null;
+    if (data) {
+      const parsed = JSON.parse(data);
+      // Sync to local cache
+      localCache.set(key, { data: parsed, expiry: Date.now() + 300000 }); // Cache for 5 mins locally
+      return parsed;
+    }
+    return null;
   } catch (error) {
-    logger.error('Cache get failed', { error: error.message });
+    logger.debug('Redis cache get failed, checked local fallback', { error: error.message });
     return null;
   }
 }

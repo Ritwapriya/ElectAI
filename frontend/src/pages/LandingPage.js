@@ -69,8 +69,12 @@ const LandingPage = () => {
   
   return (
     <div className="min-h-screen pt-10"> {/* Added padding to avoid navbar overlap */}
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[200] bg-accent-purple text-white px-4 py-2 rounded-lg">
+        Skip to main content
+      </a>
+
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+      <section id="main-content" className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         {/* ... animated background ... */}
         <div className="absolute inset-0 bg-gray-900">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent-purple/30 rounded-full blur-3xl animate-float" />
@@ -111,11 +115,11 @@ const LandingPage = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Link to="/chat" className="btn-primary flex items-center space-x-2 px-8 py-4 text-lg glow-purple">
+              <Link to="/chat" aria-label="Start exploring the AI Chat Assistant" className="btn-primary flex items-center space-x-2 px-8 py-4 text-lg glow-purple">
                 <MessageCircle className="w-5 h-5" />
                 <span>Start Exploring</span>
               </Link>
-              <Link to="/timeline" className="btn-secondary flex items-center space-x-2 px-8 py-4 text-lg">
+              <Link to="/timeline" aria-label="View the interactive election timeline" className="btn-secondary flex items-center space-x-2 px-8 py-4 text-lg">
                 <History className="w-5 h-5" />
                 <span>View Timeline</span>
               </Link>
@@ -302,7 +306,7 @@ const LandingPage = () => {
               Join thousands of citizens using AI to understand elections better. 
               Your voice matters—make it count with the right information.
             </p>
-            <Link to="/chat" className="btn-primary inline-flex items-center space-x-2">
+            <Link to="/chat" aria-label="Start your journey with the AI election assistant" className="btn-primary inline-flex items-center space-x-2">
               <Vote className="w-5 h-5" />
               <span>Start Your Journey</span>
             </Link>

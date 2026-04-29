@@ -14,12 +14,26 @@ function initLLMService() {
     }
     try {
       genAI = new GoogleGenerativeAI(apiKey);
+      
+      // Safety settings to prevent harmful content generation
+      const safetySettings = [
+        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+      ];
+
+      // System instruction for consistent AI behavior
+      const systemInstruction = "You are an expert Election Education Assistant for India. Your goal is to provide accurate, unbiased, and helpful information about voter registration, candidates, polling processes, and the democratic system. Always cite official sources like the Election Commission of India (ECI) when possible. Be neutral and non-partisan.";
+
       chatModel = genAI.getGenerativeModel({ 
-        model: 'gemini-2.5-flash',
+        model: 'gemini-2.0-flash', // Using a stable, high-performance model
         generationConfig: {
-          temperature: 0.7,
+          temperature: 0.2, // Lower temperature for more factual responses
           maxOutputTokens: 2048,
-        }
+        },
+        safetySettings,
+        systemInstruction
       });
       console.log('[LLM] Gemini AI initialized successfully');
       return true;
@@ -42,11 +56,18 @@ async function callLLM(prompt, options = {}) {
     
     console.log('[LLM] Calling Gemini API...');
     const model = genAI.getGenerativeModel({
-      model: options.model || 'gemini-2.5-flash',
+      model: options.model || 'gemini-2.0-flash',
       generationConfig: {
-        temperature: options.temperature ?? 0.7,
+        temperature: options.temperature ?? 0.2,
         maxOutputTokens: options.maxTokens || 2048,
-      }
+      },
+      safetySettings: [
+        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+      ],
+      systemInstruction: "You are an expert Election Education Assistant for India. Your goal is to provide accurate, unbiased, and helpful information about voter registration, candidates, polling processes, and the democratic system."
     });
     
     const result = await model.generateContent(prompt);
@@ -76,11 +97,18 @@ async function streamLLM(prompt, onChunk, options = {}) {
     }
     
     const model = genAI.getGenerativeModel({
-      model: options.model || 'gemini-2.5-flash',
+      model: options.model || 'gemini-2.0-flash',
       generationConfig: {
-        temperature: options.temperature ?? 0.7,
+        temperature: options.temperature ?? 0.2,
         maxOutputTokens: options.maxTokens || 2048,
-      }
+      },
+      safetySettings: [
+        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+      ],
+      systemInstruction: "You are an expert Election Education Assistant for India. Your goal is to provide accurate, unbiased, and helpful information about voter registration, candidates, polling processes, and the democratic system."
     });
     
     const result = await model.generateContentStream(prompt);

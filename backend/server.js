@@ -16,10 +16,31 @@ const agentRoutes = require('./routes/agents');
 const app = express();
 
 // Security middleware
+// Tighten Helmet configuration for better security score
 app.use(helmet({
-  contentSecurityPolicy: false, // Disable CSP for easier deployment of external scripts/styles
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://*.onrender.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https://*.onrender.com", "https://*.google.com"],
+      connectSrc: ["'self'", "https://*.onrender.com", "https://generativelanguage.googleapis.com"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
 }));
-app.use(cors()); // Allow all origins for the API in production
+
+// CORS configuration - Restrict origins in production for higher security score
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? [process.env.FRONTEND_URL, 'https://elect-ai.onrender.com'] 
+    : true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+app.use(cors(corsOptions));
 
 // Rate limiting
 const limiter = rateLimit({

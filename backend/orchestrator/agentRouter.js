@@ -17,6 +17,12 @@ class AgentRouter {
     };
   }
 
+  /**
+   * Routes a user query through the multi-agent system
+   * @param {string} query - The user's natural language question
+   * @param {Object} context - Session context including state, constituency, and language
+   * @returns {Promise<Object>} The synthesized response and metadata
+   */
   async route(query, context = {}) {
     try {
       logger.info('[AgentRouter] Analyzing query', { query });
@@ -78,6 +84,10 @@ class AgentRouter {
     }
   }
 
+  /**
+   * Checks for a direct, high-speed response for common queries
+   * @private
+   */
   getDirectResponse(query, context = {}) {
     const q = query.toLowerCase();
     const rawArea = context.constituencyName || context.stateName || 
@@ -183,6 +193,10 @@ class AgentRouter {
     return null; // no match — let the agent pipeline handle it
   }
 
+  /**
+   * Uses rule-based logic to determine which specialized agents are needed
+   * @private
+   */
   determineAgents(query) {
     const queryLower = query.toLowerCase();
     const agents = [];
@@ -238,6 +252,10 @@ class AgentRouter {
     return { agents, intent };
   }
 
+  /**
+   * Executes the pipeline of selected agents in parallel or sequence
+   * @private
+   */
   async executeAgents(selection, query, context) {
     const results = {};
     
