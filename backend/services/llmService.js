@@ -3,6 +3,13 @@ const logger = require('../utils/logger');
 
 let genAI = null;
 let chatModel = null;
+const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash'; // Optimized for stable production usage
+
+/**
+ * Google Cloud Vertex AI / Generative AI SDK Initialization
+ * This service is designed to be compatible with Google Cloud Vertex AI
+ * for enterprise-grade deployments.
+ */
 
 function initLLMService() {
   if (!genAI) {
@@ -17,10 +24,10 @@ function initLLMService() {
       
       // Safety settings to prevent harmful content generation
       const safetySettings = [
-        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+        { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+        { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+        { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
       ];
 
       // System instruction for consistent AI behavior

@@ -10,7 +10,7 @@ import AboutPage from './pages/AboutPage';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gray-900 flex flex-col">
       <Toaster 
         position="top-right"
         toastOptions={{
@@ -21,8 +21,11 @@ function App() {
           }
         }}
       />
-      <Navbar />
-      <main>
+      <header role="banner">
+        <Navbar />
+      </header>
+      
+      <main id="main-content" className="flex-1" role="main">
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/chat" element={<ChatPage />} />
@@ -30,7 +33,10 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
         </Routes>
       </main>
-      <Footer />
+
+      <footer role="contentinfo">
+        <Footer />
+      </footer>
     </div>
   );
 }
