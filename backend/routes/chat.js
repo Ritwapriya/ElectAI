@@ -11,9 +11,11 @@ const validateChatRequest = [
   body('message')
     .trim()
     .isLength({ min: 1, max: 1000 })
-    .withMessage('Message must be between 1 and 1000 characters'),
-  body('userId').optional().isString(),
-  body('explainLevel').optional().isIn(['simple', 'detailed', 'eli5'])
+    .withMessage('Message must be between 1 and 1000 characters')
+    .escape(), // Sanitize input for XSS protection
+  body('userId').optional().isString().escape(),
+  body('explainLevel').optional().isIn(['simple', 'detailed', 'eli5']),
+  body('language').optional().isString().isLength({ min: 2, max: 5 }).escape()
 ];
 
 router.post('/', validateChatRequest, async (req, res) => {
