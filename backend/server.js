@@ -111,22 +111,27 @@ async function connectDatabases() {
 }
 
 // Start HTTP server immediately
-console.log(`[DEBUG] Starting server on port ${PORT}...`);
-const server = app.listen(PORT, () => {
-  console.log(`[DEBUG] Server is now listening on port ${PORT}`);
-  logger.info(`Server running on port ${PORT}`);
-  logger.info('Multi-Agent Election Education System is starting...');
-});
+let server;
+if (require.main === module) {
+  console.log(`[DEBUG] Starting server on port ${PORT}...`);
+  server = app.listen(PORT, () => {
+    console.log(`[DEBUG] Server is now listening on port ${PORT}`);
+    logger.info(`Server running on port ${PORT}`);
+    logger.info('Multi-Agent Election Education System is starting...');
+  });
 
-server.on('error', (err) => {
-  console.error('[DEBUG] Server error:', err.message);
-});
+  server.on('error', (err) => {
+    console.error('[DEBUG] Server error:', err.message);
+  });
 
-// Connect to databases in background
-console.log('[DEBUG] Connecting to databases...');
-connectDatabases().then(() => {
-  console.log('[DEBUG] Database connections attempted');
-  logger.info('Database connections attempted');
-}).catch(err => {
-  console.error('[DEBUG] Database connection error:', err.message);
-});
+  // Connect to databases in background
+  console.log('[DEBUG] Connecting to databases...');
+  connectDatabases().then(() => {
+    console.log('[DEBUG] Database connections attempted');
+    logger.info('Database connections attempted');
+  }).catch(err => {
+    console.error('[DEBUG] Database connection error:', err.message);
+  });
+}
+
+module.exports = app;
